@@ -19,7 +19,7 @@ function getBalance(statement){
         }
     },0);
     return balance
-}
+} 
 
 function verifyIfExistsAccountCPF(request, response, next){
     const {cpf} = request.headers;
@@ -31,6 +31,7 @@ function verifyIfExistsAccountCPF(request, response, next){
     return next();
 }
 
+app.listen(3333);
 
 app.post("/account", (request, response)=>{
     const {cpf, name} = request.body;
@@ -48,7 +49,7 @@ app.post("/account", (request, response)=>{
    
 });
 //app.use(verifyIfExistsAccountCPF);
-app.get("/statement/:cpf",verifyIfExistsAccountCPF, (request,response)=>{
+app.get("/statement",verifyIfExistsAccountCPF, (request,response)=>{
     const {cliente} = request;
     return response.json(cliente.statement);
 });
@@ -76,7 +77,18 @@ app.post("/withdraw",verifyIfExistsAccountCPF, (request,response)=>{
         };
     cliente.statement.push(statementOperation);
 
-    return response.status(201).send();
-    
+    return response.status(201).send(); 
 })
-app.listen(8080);
+app.get("/statement/date",verifyIfExistsAccountCPF, (request,response)=>{
+    const {cliente} = request;
+    const {date}= request.query;
+
+    const dateFormat= new Date(date + " 00:00");
+    const statement = cliente.statement.filter(
+        (statement)=>
+    statement.created_at.toDateString()===
+    new Date(dateFormat).toDateString()
+    );
+    return response.json(statement);
+});
+
