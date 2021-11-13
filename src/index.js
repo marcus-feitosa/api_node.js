@@ -90,5 +90,19 @@ app.get("/statement/date",verifyIfExistsAccountCPF, (request,response)=>{
     new Date(dateFormat).toDateString()
     );
     return response.json(statement);
+})
+app.put("/account", verifyIfExistsAccountCPF, (request,response)=>{
+    const {name} = request.body;
+    const {cliente} = request;
+    cliente.name = name;
+
+    return response.status(201).send();
 });
+
+app.get("/account",verifyIfExistsAccountCPF,(request,response)=>{
+    const {cliente}= request;
+    return response.json(cliente);
+});
+
+
 
