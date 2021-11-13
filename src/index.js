@@ -1,7 +1,7 @@
 //const { request, response } = require("express");
 //npm install supervisor -g
 //supervisor src/index.js
-const { request, response } = require("express");
+const { request, response, text } = require("express");
 const express = require("express");
 const { v4:uuidv4 } = require("uuid");
 
@@ -102,6 +102,12 @@ app.put("/account", verifyIfExistsAccountCPF, (request,response)=>{
 app.get("/account",verifyIfExistsAccountCPF,(request,response)=>{
     const {cliente}= request;
     return response.json(cliente);
+});
+
+app.delete("/account",verifyIfExistsAccountCPF,(request,response)=>{
+    const {cliente} = request;
+    clientes.splice(cliente,1);
+return response.status(200).json({text:"Cliente deletado!"});
 });
 
 
